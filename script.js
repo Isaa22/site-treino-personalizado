@@ -42,165 +42,317 @@ document.addEventListener('DOMContentLoaded', () => {
 function generateWorkoutPlan(userData) {
     const { objetivo, nivel, idade, genero } = userData;
     
-    // Base exercises database
-    const exercises = {
-        emagrecer: {
-            cardio: ['Corrida intervalada', 'Pular corda', 'Spinning', 'HIIT - Jumping Jacks'],
-            superiores: ['Flexões', 'Tríceps no banco', 'Remada curvada com halteres', 'Desenvolvimento'],
-            inferiores: ['Agachamentos', 'Afundos', 'Leg press', 'Cadeira extensora'],
-            core: ['Prancha frontal', 'Abdominal crunch', 'Elevação de pernas', 'Russian twist']
-        },
-        hipertrofia: {
-            push: ['Supino reto', 'Desenvolvimento', 'Paralelas', 'Tríceps corda', 'Elevação lateral'],
-            pull: ['Puxada frontal', 'Remada cavalinho', 'Rosca direta', 'Rosca martelo', 'Encolhimento'],
-            legs: ['Agachamento livre', 'Levantamento terra', 'Leg press 45°', 'Cadeira flexora', 'Panturrilha']
-        },
-        definicao: {
-            fullbody: ['Agachamento com salto', 'Flexão explosiva', 'Burpees', 'Kettlebell swing', 'Mountain climbers']
-        },
-        saude: {
-            funcional: ['Alongamento dinâmico', 'Yoga básica', 'Pilates', 'Caminhada rápida', 'Mobilidade articular']
-        },
-        resistencia: {
-            endurance: ['Cooper 5km', 'Natação', 'Ciclismo', 'Remo', 'Circuito aeróbico']
-        }
-    };
-
-    let weeklyPlan = [];
-    
-    // Adjust sets/reps based on level
+    // Adjust sets/reps based on level (mas mantendo cardio todos os dias)
     const getSetsReps = () => {
         const levels = {
-            iniciante: { series: 3, repeticoes: '10-12', descanso: '60s' },
-            intermediario: { series: 4, repeticoes: '8-10', descanso: '90s' },
-            avancado: { series: 5, repeticoes: '6-8', descanso: '120s' }
+            iniciante: { series: 3, repeticoes: '10-12', descanso: '60s', cardioMin: '15-20min' },
+            intermediario: { series: 4, repeticoes: '8-10', descanso: '90s', cardioMin: '20-25min' },
+            avancado: { series: 5, repeticoes: '6-8', descanso: '120s', cardioMin: '25-30min' }
         };
         return levels[nivel] || levels.iniciante;
     };
 
     const intensity = getSetsReps();
 
-    // Generate 7-day plan
-    const days = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
-    
-    if (objetivo === 'emagrecer') {
-        weeklyPlan = [
-            { day: days[0], focus: 'HIIT + Superior', exercises: [...exercises.emagrecer.cardio.slice(0,2), ...exercises.emagrecer.superiores.slice(0,3)] },
-            { day: days[1], focus: 'Cardio + Core', exercises: [...exercises.emagrecer.cardio.slice(2,3), ...exercises.emagrecer.core] },
-            { day: days[2], focus: 'Inferiores', exercises: exercises.emagrecer.inferiores.slice(0,4) },
-            { day: days[3], focus: 'Cardio Intenso', exercises: exercises.emagrecer.cardio },
-            { day: days[4], focus: 'Full Body', exercises: [...exercises.emagrecer.superiores.slice(1,3), ...exercises.emagrecer.inferiores.slice(1,3), ...exercises.emagrecer.core.slice(0,2)] },
-            { day: days[5], focus: 'Cardio Longo', exercises: ['Cooper 5km', 'Caminhada 1h', 'Pular corda 30min'] },
-            { day: days[6], focus: 'Descanso Ativo', exercises: ['Alongamento geral', 'Caminhada leve 30min', 'Alongamento específico'] }
-        ];
-    } 
-    else if (objetivo === 'hipertrofia') {
-        weeklyPlan = [
-            { day: days[0], focus: 'Push (Peito, Ombro, Tríceps)', exercises: exercises.hipertrofia.push },
-            { day: days[1], focus: 'Pull (Costas, Bíceps)', exercises: exercises.hipertrofia.pull },
-            { day: days[2], focus: 'Legs (Pernas)', exercises: exercises.hipertrofia.legs },
-            { day: days[3], focus: 'Push (Foco em intensidade)', exercises: exercises.hipertrofia.push },
-            { day: days[4], focus: 'Pull (Foco em carga)', exercises: exercises.hipertrofia.pull.slice(0,4) },
-            { day: days[5], focus: 'Legs + Core', exercises: [...exercises.hipertrofia.legs, ...exercises.emagrecer.core.slice(0,2)] },
-            { day: days[6], focus: 'Descanso e Recuperação', exercises: ['Massagem', 'Alongamento', 'Mobilidade'] }
-        ];
-    }
-    else if (objetivo === 'definicao') {
-        weeklyPlan = [
-            { day: days[0], focus: 'Full Body Power', exercises: exercises.definicao.fullbody },
-            { day: days[1], focus: 'Cardio + Core', exercises: [...exercises.emagrecer.cardio.slice(0,3), ...exercises.emagrecer.core] },
-            { day: days[2], focus: 'Circuito Superior', exercises: exercises.hipertrofia.push.slice(0,3) },
-            { day: days[3], focus: 'Circuito Inferior', exercises: exercises.hipertrofia.legs.slice(0,3) },
-            { day: days[4], focus: 'HIIT Avançado', exercises: exercises.emagrecer.cardio },
-            { day: days[5], focus: 'Full Body + Cardio', exercises: [...exercises.definicao.fullbody, ...exercises.emagrecer.cardio.slice(0,2)] },
-            { day: days[6], focus: 'Recuperação', exercises: ['Yoga', 'Alongamento', 'Respiração'] }
-        ];
-    }
-    else if (objetivo === 'saude') {
-        weeklyPlan = [
-            { day: days[0], focus: 'Funcional + Mobilidade', exercises: exercises.saude.funcional.slice(0,3) },
-            { day: days[1], focus: 'Caminhada + Alongamento', exercises: [...exercises.saude.funcional.slice(2,4), 'Alongamento geral'] },
-            { day: days[2], focus: 'Pilates + Yoga', exercises: exercises.saude.funcional.slice(1,4) },
-            { day: days[3], focus: 'Funcional Moderado', exercises: exercises.saude.funcional },
-            { day: days[4], focus: 'Mobilidade + Core', exercises: [...exercises.emagrecer.core.slice(0,3), 'Mobilidade completa'] },
-            { day: days[5], focus: 'Caminhada na Natureza', exercises: ['Caminhada 40min', 'Alongamento dinâmico', 'Respiração'] },
-            { day: days[6], focus: 'Descanso Ativo', exercises: ['Lazer ativo', 'Alongamento leve', 'Meditação'] }
-        ];
-    }
-    else if (objetivo === 'resistencia') {
-        weeklyPlan = [
-            { day: days[0], focus: 'Corrida', exercises: exercises.resistencia.endurance.slice(0,2) },
-            { day: days[1], focus: 'Natação', exercises: [exercises.resistencia.endurance[1]] },
-            { day: days[2], focus: 'Ciclismo', exercises: [exercises.resistencia.endurance[2]] },
-            { day: days[3], focus: 'Circuito Aeróbico', exercises: exercises.resistencia.endurance },
-            { day: days[4], focus: 'Remo + Corrida', exercises: [exercises.resistencia.endurance[3], exercises.resistencia.endurance[0]] },
-            { day: days[5], focus: 'Longão - Resistência', exercises: ['Cooper 10km', 'Treino intervalado longo'] },
-            { day: days[6], focus: 'Recuperação', exercises: ['Alongamento', 'Hidratação intensa', 'Exercícios respiratórios'] }
-        ];
-    }
+    // Cardio options for each day (diferentes estímulos)
+    const cardioOptions = {
+        segunda: [
+            { nome: 'Esteira Inclinada', tempo: intensity.cardioMin, intensidade: 'Moderado' },
+            { nome: 'Bicicleta Ergométrica', tempo: intensity.cardioMin, intensidade: 'Moderado' },
+            { nome: 'Elíptico', tempo: intensity.cardioMin, intensidade: 'Moderado' }
+        ],
+        terca: [
+            { nome: 'HIIT na Esteira', tempo: '15min', intensidade: 'Alta (30s tiro/30s descanso)' },
+            { nome: 'Pular Corda', tempo: '15min', intensidade: 'Alta' },
+            { nome: 'Spinning', tempo: '20min', intensidade: 'Alta' }
+        ],
+        quarta: [
+            { nome: 'Caminhada Rápida', tempo: intensity.cardioMin, intensidade: 'Leve a Moderado' },
+            { nome: 'Remo', tempo: intensity.cardioMin, intensidade: 'Moderado' },
+            { nome: 'Transporte', tempo: intensity.cardioMin, intensidade: 'Moderado' }
+        ],
+        quinta: [
+            { nome: 'Corrida Contínua', tempo: '20-25min', intensidade: 'Moderado/Alta' },
+            { nome: 'Bicicleta', tempo: '25min', intensidade: 'Moderado/Alta' },
+            { nome: 'Circuito Aeróbico', tempo: '20min', intensidade: 'Alta' }
+        ],
+        sexta: [
+            { nome: 'Esteira (Leve)', tempo: intensity.cardioMin, intensidade: 'Leve (recuperação)' },
+            { nome: 'Caminhada', tempo: intensity.cardioMin, intensidade: 'Leve' },
+            { nome: 'Elíptico Leve', tempo: intensity.cardioMin, intensidade: 'Leve' }
+        ],
+        sabado: [
+            { nome: 'HIIT Avançado', tempo: '20min', intensidade: 'Muito Alta' },
+            { nome: 'Pular Corda + Burpees', tempo: '15min', intensidade: 'Muito Alta' },
+            { nome: 'Corrida na Praia/Pista', tempo: '25min', intensidade: 'Alta' }
+        ],
+        domingo: [
+            { nome: 'Caminhada Ativa', tempo: '30min', intensidade: 'Leve (recuperação ativa)' },
+            { nome: 'Alongamento Cardio', tempo: '20min', intensidade: 'Muito Leve' },
+            { nome: 'Yoga Flow', tempo: '20min', intensidade: 'Leve' }
+        ]
+    };
 
-    // Add intensity info to each exercise
-    weeklyPlan = weeklyPlan.map(day => ({
-        ...day,
+    // ========== ESTRUTURA DE TREINO PERSONALIZADA ==========
+    // Divisão exata como você pediu:
+    // Segunda: Posterior
+    // Terça: Costa e Bíceps
+    // Quarta: Quadríceps
+    // Quinta: Peito, Tríceps e Ombro
+    // Sexta: Glúteo Isolado
+    // Sábado: Costa
+    // Domingo: Quadríceps e Glúteo
+    
+    const workoutStructure = {
+        segunda: {
+            foco: '🦵 POSTERIOR DE COXA (Isquiotibiais)',
+            exercicios: [
+                { nome: 'Cadeira Flexora', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Mesa Flexora', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Stiff', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Levantamento Terra Romeno', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Afundo com Halteres', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Good Morning', series: intensity.series - 1, repeticoes: intensity.repeticoes, descanso: intensity.descanso }
+            ]
+        },
+        terca: {
+            foco: '💪 COSTA e BÍCEPS',
+            exercicios: [
+                { nome: 'Puxada Frontal (Pulley)', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Remada Curvada', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Remada Unilateral', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Barra Fixa (ou graviton)', series: intensity.series - 1, repeticoes: 'max', descanso: intensity.descanso },
+                { nome: 'Rosca Direta', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Rosca Martelo', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Rosca Scott', series: intensity.series - 1, repeticoes: intensity.repeticoes, descanso: intensity.descanso }
+            ]
+        },
+        quarta: {
+            foco: '💪 QUADRÍCEPS',
+            exercicios: [
+                { nome: 'Agachamento Livre', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Leg Press 45°', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Cadeira Extensora', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Agachamento Hack', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Afundo', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Agachamento Búlgaro', series: intensity.series - 1, repeticoes: intensity.repeticoes, descanso: intensity.descanso }
+            ]
+        },
+        quinta: {
+            foco: '🎯 PEITO, TRÍCEPS e OMBRO',
+            exercicios: [
+                { nome: 'Supino Reto', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Supino Inclinado', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Crucifixo', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Desenvolvimento', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Elevação Lateral', series: intensity.series, repeticoes: intensity.repeticoes + 4, descanso: intensity.descanso },
+                { nome: 'Tríceps Corda', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Tríceps Testa', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso }
+            ]
+        },
+        sexta: {
+            foco: '🍑 GLÚTEO ISOLADO',
+            exercicios: [
+                { nome: 'Elevação Pélvica', series: intensity.series + 1, repeticoes: '12-15', descanso: intensity.descanso },
+                { nome: 'Cadeira Abdutora', series: intensity.series, repeticoes: '15-20', descanso: intensity.descanso },
+                { nome: 'Glúteo no Cabo', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Agachamento Sumô', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Coice no Cabo', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Passada Lateral', series: intensity.series, repeticoes: '12-15 cada', descanso: intensity.descanso },
+                { nome: 'Ponte Unilateral', series: intensity.series - 1, repeticoes: '15 cada', descanso: intensity.descanso }
+            ]
+        },
+        sabado: {
+            foco: '💪 COSTA (Ênfase em Espessura e Largura)',
+            exercicios: [
+                { nome: 'Puxada Aberta', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Remada Cavalinho', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Pulley Frente', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Remada Máquina', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Encolhimento (Trapézio)', series: intensity.series, repeticoes: '12-15', descanso: intensity.descanso },
+                { nome: 'Crucifixo Inverso', series: intensity.series - 1, repeticoes: '12-15', descanso: intensity.descanso }
+            ]
+        },
+        domingo: {
+            foco: '🦵 QUADRÍCEPS e GLÚTEO (Combinado)',
+            exercicios: [
+                { nome: 'Agachamento Profundo', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Leg Press (pés altos)', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Cadeira Extensora', series: intensity.series, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Elevação Pélvica com Carga', series: intensity.series, repeticoes: '10-12', descanso: intensity.descanso },
+                { nome: 'Agachamento Búlgaro', series: intensity.series - 1, repeticoes: intensity.repeticoes, descanso: intensity.descanso },
+                { nome: 'Cadeira Abdutora', series: intensity.series, repeticoes: '15-20', descanso: intensity.descanso },
+                { nome: 'Afundo com Salto', series: intensity.series - 1, repeticoes: '10-12', descanso: intensity.descanso }
+            ]
+        }
+    };
+
+    // Array com os dias da semana na ordem correta
+    const daysOrder = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'];
+    const daysNames = {
+        segunda: 'Segunda-feira',
+        terca: 'Terça-feira',
+        quarta: 'Quarta-feira',
+        quinta: 'Quinta-feira',
+        sexta: 'Sexta-feira',
+        sabado: 'Sábado',
+        domingo: 'Domingo'
+    };
+
+    // Montar o plano semanal
+    const weeklyPlan = daysOrder.map(day => ({
+        day: daysNames[day],
+        dayKey: day,
+        foco: workoutStructure[day].foco,
+        exercicios: workoutStructure[day].exercicios,
+        cardios: cardioOptions[day],
         intensity: intensity
     }));
 
-    return weeklyPlan;
+    return { weeklyPlan, objetivo, userData };
 }
 
 // Display workout plan
-function displayWorkoutPlan(plan, userData) {
+function displayWorkoutPlan(planData, userData) {
     const container = document.getElementById('workoutContent');
+    const { weeklyPlan, objetivo } = planData;
     
-    let html = `<div class="user-info" style="background: rgba(139,0,0,0.1); padding: 1rem; border-radius: 10px; margin-bottom: 2rem;">
-                    <p><strong><i class="fas fa-user"></i> Aluno:</strong> ${userData.nome}</p>
-                    <p><strong><i class="fas fa-bullseye"></i> Objetivo:</strong> ${getObjetivoNome(userData.objetivo)}</p>
-                    <p><strong><i class="fas fa-chart-line"></i> Nível:</strong> ${getNivelNome(userData.nivel)}</p>
-                    <p><strong><i class="fas fa-clock"></i> Duração:</strong> 60-90 minutos por treino</p>
-                </div>`;
-    
-    plan.forEach(day => {
-        html += `
-            <div class="day-card">
-                <div class="day-header">
-                    <div class="day-name">${day.day}</div>
-                    <div class="day-focus">🎯 ${day.focus}</div>
+    // Header com informações do usuário
+    let html = `
+        <div class="user-info" style="background: linear-gradient(135deg, rgba(139,0,0,0.15), rgba(0,0,0,0.3)); padding: 1.5rem; border-radius: 15px; margin-bottom: 2rem; border: 1px solid rgba(139,0,0,0.3);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div>
+                    <i class="fas fa-user" style="color: #8B0000; margin-right: 8px;"></i>
+                    <strong>Aluno:</strong> ${userData.nome}
                 </div>
-                <ul class="exercise-list">
+                <div>
+                    <i class="fas fa-bullseye" style="color: #8B0000; margin-right: 8px;"></i>
+                    <strong>Objetivo:</strong> ${getObjetivoNome(objetivo)}
+                </div>
+                <div>
+                    <i class="fas fa-chart-line" style="color: #8B0000; margin-right: 8px;"></i>
+                    <strong>Nível:</strong> ${getNivelNome(userData.nivel)}
+                </div>
+                <div>
+                    <i class="fas fa-calendar-alt" style="color: #8B0000; margin-right: 8px;"></i>
+                    <strong>Idade:</strong> ${userData.idade} anos
+                </div>
+            </div>
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(139,0,0,0.3); text-align: center;">
+                <i class="fas fa-heartbeat" style="color: #8B0000;"></i> 
+                <strong>Cardio diário incluso!</strong> Todos os treinos têm sessão cardiovascular
+            </div>
+        </div>
+    `;
+    
+    // Gerar cada dia de treino
+    weeklyPlan.forEach(day => {
+        html += `
+            <div class="day-card" style="margin-bottom: 1.5rem;">
+                <div class="day-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <div class="day-name" style="font-size: 1.4rem; font-weight: 700; color: #8B0000;">
+                        <i class="fas fa-calendar-day"></i> ${day.day}
+                    </div>
+                    <div class="day-focus" style="background: rgba(139, 0, 0, 0.3); padding: 0.5rem 1rem; border-radius: 20px;">
+                        🎯 ${day.foco}
+                    </div>
+                </div>
+                
+                <!-- Exercícios -->
+                <h4 style="margin: 1rem 0 0.5rem 0; color: #cc3333;">
+                    <i class="fas fa-dumbbell"></i> Exercícios:
+                </h4>
+                <ul class="exercise-list" style="list-style: none;">
         `;
         
-        day.exercises.forEach(exercise => {
+        day.exercicios.forEach((exercicio, index) => {
             html += `
-                <li class="exercise-item">
-                    <div class="exercise-icon"><i class="fas fa-dumbbell"></i></div>
-                    <div class="exercise-details">
-                        <div class="exercise-name">${exercise}</div>
-                        <div class="exercise-sets">${day.intensity.series} séries × ${day.intensity.repeticoes} reps | Descanso: ${day.intensity.descanso}</div>
+                <li class="exercise-item" style="display: flex; align-items: center; padding: 0.8rem; background: rgba(255, 255, 255, 0.05); margin-bottom: 0.5rem; border-radius: 10px;">
+                    <div class="exercise-icon" style="width: 40px; color: #8B0000;">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="exercise-details" style="flex: 1;">
+                        <div class="exercise-name" style="font-weight: 600;">${exercicio.nome}</div>
+                        <div class="exercise-sets" style="font-size: 0.85rem; color: #ccc;">
+                            ${exercicio.series} séries × ${exercicio.repeticoes} reps | Descanso: ${exercicio.descanso}
+                        </div>
                     </div>
                 </li>
             `;
         });
         
+        // Cardio do dia
         html += `
                 </ul>
-                <div style="margin-top: 1rem; font-size: 0.85rem; color: #8B0000;">
-                    <i class="fas fa-hourglass-half"></i> Tempo estimado: 45-60 minutos
+                
+                <div style="margin-top: 1rem; padding: 1rem; background: linear-gradient(135deg, rgba(139,0,0,0.2), rgba(0,0,0,0.3)); border-radius: 10px; border-left: 3px solid #8B0000;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #cc3333;">
+                        <i class="fas fa-heartbeat"></i> Cardio do Dia:
+                    </h4>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        ${day.cardios.map(cardio => `
+                            <div style="background: rgba(0,0,0,0.3); padding: 0.5rem 1rem; border-radius: 8px;">
+                                <strong>${cardio.nome}</strong><br>
+                                <span style="font-size: 0.85rem;">⏱️ ${cardio.tempo} | 🔥 Intensidade: ${cardio.intensidade}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #ccc;">
+                        <i class="fas fa-info-circle"></i> Escolha UMA das opções de cardio acima
+                    </div>
+                </div>
+                
+                <div style="margin-top: 0.8rem; display: flex; gap: 1rem; font-size: 0.85rem; color: #8B0000;">
+                    <div><i class="fas fa-hourglass-half"></i> Duração total: 60-75 minutos</div>
+                    <div><i class="fas fa-fire"></i> Intensidade: ${userData.nivel === 'avancado' ? 'Alta' : userData.nivel === 'intermediario' ? 'Média' : 'Moderada'}</div>
                 </div>
             </div>
         `;
     });
     
-    // Add tips
+    // Dicas Gerais
     html += `
-        <div style="background: rgba(139,0,0,0.2); padding: 1.5rem; border-radius: 15px; margin-top: 1rem;">
-            <h3><i class="fas fa-lightbulb"></i> Dicas importantes:</h3>
-            <ul style="margin-top: 0.5rem; list-style-position: inside;">
-                <li>🔥 Faça sempre 5-10 minutos de aquecimento antes dos treinos</li>
-                <li>💧 Mantenha-se hidratado durante toda a sessão</li>
-                <li>🎯 Respeite seus limites e evolua gradualmente</li>
-                <li>📅 Descanse adequadamente entre os treinos</li>
-                <li>🥗 Combine com uma alimentação equilibrada para melhores resultados</li>
-            </ul>
+        <div style="background: linear-gradient(135deg, rgba(139,0,0,0.2), rgba(0,0,0,0.3)); padding: 1.5rem; border-radius: 15px; margin-top: 1rem;">
+            <h3 style="color: #8B0000; margin-bottom: 1rem;">
+                <i class="fas fa-lightbulb"></i> Dicas Específicas para sua Divisão de Treino:
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div>
+                    <i class="fas fa-check-circle" style="color: #8B0000;"></i>
+                    <strong>Posterior (Segunda):</strong> Foque na conexão mente-músculo, execute movimentos controlados
+                </div>
+                <div>
+                    <i class="fas fa-check-circle" style="color: #8B0000;"></i>
+                    <strong>Costa/Bíceps (Terça):</strong> Mantenha escápulas retraídas, cotovelos alinhados
+                </div>
+                <div>
+                    <i class="fas fa-check-circle" style="color: #8B0000;"></i>
+                    <strong>Quadríceps (Quarta):</strong> Profundidade é key, joelhos alinhados com pés
+                </div>
+                <div>
+                    <i class="fas fa-check-circle" style="color: #8B0000;"></i>
+                    <strong>Peito/Tríceps/Ombro (Quinta):</strong> Estabilize escapulas, ombros para trás
+                </div>
+                <div>
+                    <i class="fas fa-check-circle" style="color: #8B0000;"></i>
+                    <strong>Glúteo Isolado (Sexta):</strong> Ativação glútea antes, contração máxima no topo
+                </div>
+                <div>
+                    <i class="fas fa-check-circle" style="color: #8B0000;"></i>
+                    <strong>Costa (Sábado):</strong> Varie pegadas para estimular diferentes áreas
+                </div>
+                <div>
+                    <i class="fas fa-check-circle" style="color: #8B0000;"></i>
+                    <strong>Quadríceps/Glúteo (Domingo):</strong> Mantenha intensidade moderada para não sobrecarregar
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 1rem; padding: 1rem; text-align: center; font-size: 0.85rem; color: #ccc; background: rgba(0,0,0,0.3); border-radius: 10px;">
+            <i class="fas fa-heart" style="color: #8B0000;"></i> 
+            <strong>Cardio é OBRIGATÓRIO todos os dias!</strong> Adapte a intensidade conforme sua recuperação
+            <br><br>
+            <i class="fas fa-shield-alt"></i> Consulte um profissional de educação física e médico antes de iniciar
         </div>
     `;
     
@@ -221,14 +373,14 @@ function getObjetivoNome(objetivo) {
 
 function getNivelNome(nivel) {
     const niveis = {
-        'iniciante': 'Iniciante',
-        'intermediario': 'Intermediário',
-        'avancado': 'Avançado'
+        'iniciante': 'Iniciante (0-6 meses)',
+        'intermediario': 'Intermediário (6-18 meses)',
+        'avancado': 'Avançado (+18 meses)'
     };
     return niveis[nivel] || nivel;
 }
 
-// Download as PDF (simplified version using print)
+// Download as PDF
 function downloadAsPDF() {
     window.print();
 }
@@ -255,6 +407,12 @@ style.textContent = `
         }
         .btn-secondary {
             display: none;
+        }
+        .day-card {
+            background: #f9f9f9 !important;
+            border-left: 4px solid #8B0000 !important;
+            break-inside: avoid;
+            page-break-inside: avoid;
         }
         .user-info {
             background: #f0f0f0 !important;
