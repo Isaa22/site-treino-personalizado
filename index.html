@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Training - Treino Personalizado</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <span>Elite<span class="highlight">Training</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#contato">Contato</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container" id="home">
+        <div class="hero-section">
+            <h1>Monte Seu Treino <span class="gradient-text">Personalizado</span></h1>
+            <p>Resultados reais com treinos desenvolvidos especialmente para você</p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="form-container" id="form-container">
+            <h2><i class="fas fa-user-plus"></i> Cadastro Rápido</h2>
+            <form id="registerForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="nome" placeholder="Nome completo" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" placeholder="E-mail" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-calendar-alt"></i>
+                    <input type="number" id="idade" placeholder="Idade" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-venus-mars"></i>
+                    <select id="genero" required>
+                        <option value="">Gênero</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-bullseye"></i>
+                    <select id="objetivo" required>
+                        <option value="">Seu objetivo principal</option>
+                        <option value="emagrecer">Emagrecimento / Perda de peso</option>
+                        <option value="hipertrofia">Hipertrofia / Ganho de massa muscular</option>
+                        <option value="definicao">Definição muscular</option>
+                        <option value="saude">Saúde e bem-estar</option>
+                        <option value="resistencia">Resistência cardiovascular</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-clock"></i>
+                    <select id="nivel" required>
+                        <option value="">Nível de experiência</option>
+                        <option value="iniciante">Iniciante (0-6 meses)</option>
+                        <option value="intermediario">Intermediário (6-18 meses)</option>
+                        <option value="avancado">Avançado (+18 meses)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-fire"></i> GERAR TREINO PERSONALIZADO
+                </button>
+            </form>
+        </div>
+
+        <!-- Workout Plan Display -->
+        <div id="workoutPlan" class="workout-plan" style="display: none;">
+            <div class="plan-header">
+                <h2><i class="fas fa-dumbbell"></i> Seu Treino Personalizado</h2>
+                <button id="downloadBtn" class="btn-secondary">
+                    <i class="fas fa-download"></i> Baixar PDF
+                </button>
+            </div>
+            <div id="workoutContent"></div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
